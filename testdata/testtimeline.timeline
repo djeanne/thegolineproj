@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<timeline>
+  <version>1.19.0 (a5f8103cf2d3 2019-04-27)</version>
+  <timetype>gregoriantime</timetype>
+  <categories>
+  </categories>
+  <events>
+    <event>
+      <start>2019-10-20 00:00:00</start>
+      <end>2019-10-20 00:00:00</end>
+      <text>Launched the GoLine project!</text>
+      <progress>0</progress>
+      <fuzzy>False</fuzzy>
+      <locked>False</locked>
+      <ends_today>False</ends_today>
+      <default_color>211,211,211</default_color>
+    </event>
+    <event>
+      <start>2018-10-20 00:00:00</start>
+      <end>2018-10-20 00:00:00</end>
+      <text>One negative year anniversary of the GoLine project!</text>
+      <progress>0</progress>
+      <fuzzy>False</fuzzy>
+      <locked>False</locked>
+      <ends_today>False</ends_today>
+      <default_color>211,211,211</default_color>
+    </event>
+  </events>
+  <view>
+    <displayed_period>
+      <start>2019-10-05 18:53:01</start>
+      <end>2019-11-04 18:53:01</end>
+    </displayed_period>
+    <hidden_categories>
+    </hidden_categories>
+  </view>
+</timeline>
