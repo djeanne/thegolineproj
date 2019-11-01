@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 
 	//"strings"
 	"time"
@@ -130,6 +131,10 @@ and, if yes, calculate how much time has elapsed in years */
 func onThisDay(timeline Timeline) {
 
 	now := time.Now()
+
+	sort.Slice(timeline.Events.Events, func(i, j int) bool {
+		return timeline.Events.Events[i].Start < timeline.Events.Events[j].Start
+	})
 
 	for _, event := range timeline.Events.Events {
 
