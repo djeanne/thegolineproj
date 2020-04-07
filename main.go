@@ -156,14 +156,11 @@ func onThisDay(timeline Timeline, month int, day int) {
 
 	for _, event := range timeline.Events.Events {
 
+		// only point events or their starting points as of now, continous events will be dealt with later separately
 		parsedStarts, err := time.Parse(pseudoISO, event.Start)
 		if err != nil {
 			log.Printf("Incorrect date format for '%s'\n", event.Text)
 		}
-		/*parsedEnds, err := time.Parse(pseudoISO, event.End)
-		if err != nil {
-			log.Printf("Incorrect date format for '%s'\n", event.Text)
-		}*/
 
 		ago := now.Sub(parsedStarts)
 		yearsAgo := int(ago.Hours() / 8760.0)
