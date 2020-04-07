@@ -8,8 +8,7 @@ import (
 	"log"
 	"os"
 	"sort"
-	
-	//"strings"
+	"strings"
 	"time"
 )
 
@@ -166,7 +165,9 @@ func onThisDay(timeline Timeline, month int, day int) {
 		yearsAgo := int(ago.Hours() / 8760.0)
 
 		if day == parsedStarts.Day() && time.Month(month) == parsedStarts.Month() {
-			fmt.Printf("On this day in history: %s (%s, %d years ago)\n", event.Text, parsedStarts.Format(textDate), yearsAgo)
+			if !(strings.HasSuffix(event.Text, "'s birthday")) {
+				fmt.Printf("On this day in history: %s (%s, %d years ago)\n", event.Text, parsedStarts.Format(textDate), yearsAgo)
+			}
 		}
 	}
 }
