@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"sort"
-
+	
 	//"strings"
 	"time"
 )
@@ -101,8 +102,25 @@ const (
 
 func main() {
 
+	var thisMonth int
+	var thisDay int
+
+	now := time.Now()
+	nowDay, nowMonth := now.Day(), int(now.Month())
+
+	/* 
+	Pass the date that is to be checked for anniversaries
+	current day is the default option
+	*/
+
+	flag.IntVar(&thisMonth, "month", nowMonth, "the month wherein the event took place")
+	flag.IntVar(&thisDay, "day", nowDay, "the day whereupon the event took place")
+
+	flag.Parse()
+
 	timeline := parseTimeline("testdata/testtimeline.timeline")
-	onThisDay(timeline)
+
+	onThisDay(timeline, thisMonth, thisDay)
 }
 
 // Parse the timeline file created by the software
@@ -128,7 +146,7 @@ func parseTimeline(timefile string) Timeline {
 /* Determine whether on a given day it is the anniversary of any Timeline event
 and, if yes, calculate how much time has elapsed in years */
 
-func onThisDay(timeline Timeline) {
+func onThisDay(timeline Timeline, month int, day int) {
 
 	now := time.Now()
 
@@ -150,7 +168,7 @@ func onThisDay(timeline Timeline) {
 		ago := now.Sub(parsedStarts)
 		yearsAgo := int(ago.Hours() / 8760.0)
 
-		if now.Day() == parsedStarts.Day() && now.Month() == parsedStarts.Month() {
+		if day == parsedStarts.Day() && time.Month(month) == parsedStarts.Month() {
 			fmt.Printf("On this day in history: %s (%s, %d years ago)\n", event.Text, parsedStarts.Format(textDate), yearsAgo)
 		}
 	}
