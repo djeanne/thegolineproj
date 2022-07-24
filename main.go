@@ -67,8 +67,8 @@ type Event struct {
 	Fuzzy        string   `xml:"fuzzy" json:"fuzzy"`
 	Locked       string   `xml:"locked" json:"locked"`
 	EndsToday    string   `xml:"ends_today" json:"ends_today"`
-	Category     string   `xml:"category" json:"category"`
-	Description  string   `xml:"description" json:"description"`
+	Category     string   `xml:"category,omitempty" json:"category,omitempty"`
+	Description  string   `xml:"description,omitempty" json:"description,omitempty"`
 	DefaultColor string   `xml:"default_color" json:"default_color"`
 	Milestone    string   `xml:"milestone" json:"milestone"`
 }
@@ -116,6 +116,7 @@ func main() {
 	flag.IntVar(&thisMonth, "month", nowMonth, "the month wherein the event took place")
 	flag.IntVar(&thisDay, "day", nowDay, "the day whereupon the event took place")
 	generateJson:= flag.Bool("json", false, "optional json output")
+	addNewEventFromJson:= flag.Bool("update", false, "optional - add new event and update timeline")
 
 	flag.Parse()
 
@@ -123,6 +124,10 @@ func main() {
 
 	if *generateJson == true {
 		makeJSON(timeline)
+	}
+
+	if *addNewEventFromJson == true {
+		addEventsFromJson("testdata/testevent.json", timeline)
 	}
 }
 
@@ -167,7 +172,7 @@ func onThisDay(timeline Timeline, month int, day int) {
 
 		if day == parsedStarts.Day() && time.Month(month) == parsedStarts.Month() {
 			if !(strings.HasSuffix(event.Text, "'s birthday")) {
-				fmt.Printf("On this day in Mistory: %s (%s, %d years ago)\n", event.Text, parsedStarts.Format(textDate), yearsAgo)
+				fmt.Printf("On this day in history: %s (%s, %d years ago)\n", event.Text, parsedStarts.Format(textDate), yearsAgo)
 			}
 		}
 	}
@@ -186,3 +191,42 @@ func makeJSON(timeline Timeline) {
 	}	
 
 }
+
+func (events *Events) AddEvent(event Event) {
+    events.Events = append(events.Events, event)
+}
+
+func addEventsFromJson(eventJson string, timeline Timeline) {
+	newEvent := parseNewEventFromJSON(eventJson)
+	timeline.Events.AddEvent(newEvent)
+	makeTimeline(timeline)
+}
+
+func parseNewEventFromJSON(eventJson string) Event {
+	var event Event
+
+	eventJsonFile, err := os.Open(eventJson)
+	if err != nil {
+		log.Printf("Couldn't parse json", err)
+	}
+	defer eventJsonFile.Close()
+
+	jsonEvent, err := ioutil.ReadAll(eventJsonFile)
+	err = json.Unmarshal(jsonEvent, &event)
+	if err != nil {
+		log.Printf("Couldn't parse the timeline file.")
+	}
+
+	return event
+}
+
+//TODO: validate event
+
+func makeTimeline(timeline Timeline){
+	file, err := xml.MarshalIndent(timeline, "", " ")
+	err = ioutil.WriteFile("updated.timeline", file, 0644)
+	if err != nil {
+		log.Printf("Couldn't create timeline file")
+	}
+}
+
